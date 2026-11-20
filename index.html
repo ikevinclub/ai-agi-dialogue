@@ -87,29 +87,11 @@
 </head>
 <body class="bg-stone-300 dark:bg-slate-950 font-sans text-paper-text dark:text-obsidian-text transition-colors duration-300 min-h-screen py-0 sm:py-8">
 
-    <!-- 顶栏悬浮控制菜单（导出图片时自动隐藏） -->
-    <nav id="control-bar" class="no-print fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border border-stone-300 dark:border-slate-700 rounded-full px-5 py-2.5 shadow-2xl flex items-center gap-3 transition-all duration-300">
-        <!-- 主题切换按钮 -->
-        <button id="btn-theme" class="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 transition">
-            <span id="theme-icon-paper" class="block dark:hidden text-amber-700">📜 暖纸模式</span>
-            <span id="theme-icon-obsidian" class="hidden dark:block text-amber-400">🌃 极夜模式</span>
-        </button>
-
-        <div class="h-4 w-px bg-stone-300 dark:bg-slate-700"></div>
-
-        <!-- 字号调节 -->
-        <button id="btn-font" class="flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-full bg-stone-100 dark:bg-slate-800 hover:bg-stone-200 dark:hover:bg-slate-700 transition">
-            <span id="font-size-label">字号: 标准</span>
-        </button>
-
-        <div class="h-4 w-px bg-stone-300 dark:bg-slate-700"></div>
-
-        <!-- 保存高清长图 -->
-        <button id="btn-export" class="flex items-center gap-1.5 text-xs font-bold px-4 py-1.5 rounded-full bg-red-800 dark:bg-red-700 text-white hover:bg-red-900 dark:hover:bg-red-600 transition shadow-md">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-            <span>保存高清长图</span>
-        </button>
-    </nav>
+    <!-- 保存高清长图（固定右上角悬浮，适配刘海屏安全区） -->
+    <button id="btn-export" aria-label="保存高清长图" class="no-print fixed right-0 top-0 z-50 flex items-center gap-1.5 rounded-full bg-red-800 px-4 py-2.5 text-xs font-bold text-white shadow-2xl transition hover:bg-red-900 active:scale-95 dark:bg-red-700 dark:hover:bg-red-600" style="margin-top: calc(1rem + env(safe-area-inset-top)); margin-right: calc(1rem + env(safe-area-inset-right));">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <span class="whitespace-nowrap">保存高清长图</span>
+    </button>
 
     <!-- 动态提示 Toast -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-stone-900/90 dark:bg-slate-800/95 text-white text-xs font-medium px-5 py-2.5 rounded-full shadow-2xl opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2">
@@ -121,7 +103,7 @@
     <main id="export-container" class="mx-auto w-full max-w-[720px] bg-paper-bg dark:bg-obsidian-bg border-x border-paper-border dark:border-obsidian-border shadow-2xl transition-all duration-300">
         
         <!-- ================= 顶部 Header ================= -->
-        <header class="pt-12 pb-10 px-6 sm:px-10 text-center border-b border-paper-border dark:border-obsidian-border relative">
+        <header class="pt-20 sm:pt-12 pb-10 px-6 sm:px-10 text-center border-b border-paper-border dark:border-obsidian-border relative">
             <div class="inline-block px-3.5 py-1 mb-4 text-[11px] font-semibold tracking-widest text-paper-accent dark:text-obsidian-accent border border-paper-accent/30 dark:border-obsidian-accent/30 rounded-full uppercase">
                 DEEP HUMANITY & AI ESSAY • 完整对谈录
             </div>
@@ -504,33 +486,7 @@
 
     <!-- JavaScript 代码逻辑 -->
     <script>
-        // 1. 主题切换
-        const btnTheme = document.getElementById('btn-theme');
-        btnTheme.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-        });
-
-        // 2. 字号切换逻辑 (标准 -> 大字)
-        const btnFont = document.getElementById('btn-font');
-        const fontSizeLabel = document.getElementById('font-size-label');
-        const articleBody = document.getElementById('article-body');
-        let currentFontState = 'normal'; // normal | large
-
-        btnFont.addEventListener('click', () => {
-            if (currentFontState === 'normal') {
-                articleBody.classList.remove('text-sm');
-                articleBody.classList.add('text-base');
-                fontSizeLabel.textContent = '字号: 舒适大字';
-                currentFontState = 'large';
-            } else {
-                articleBody.classList.remove('text-base');
-                articleBody.classList.add('text-sm');
-                fontSizeLabel.textContent = '字号: 标准';
-                currentFontState = 'normal';
-            }
-        });
-
-        // 3. 动态提示 Toast
+        // 1. 动态提示 Toast
         function showToast(msg, icon = '⏳') {
             const toast = document.getElementById('toast');
             document.getElementById('toast-text').textContent = msg;
@@ -542,16 +498,12 @@
             toast.classList.add('opacity-0', 'pointer-events-none');
         }
 
-        // 4. 一键导出高清 PNG 长图
+        // 2. 一键导出高清 PNG 长图
         const btnExport = document.getElementById('btn-export');
-        const controlBar = document.getElementById('control-bar');
         const exportContainer = document.getElementById('export-container');
 
         btnExport.addEventListener('click', async () => {
             showToast('正在渲染高清长图，全文无删减中...', '🎨');
-
-            // 暂时隐藏控制菜单
-            controlBar.style.display = 'none';
 
             try {
                 // 微延迟确保界面响应
@@ -577,8 +529,6 @@
                 console.error(err);
                 showToast('长图生成遇到问题，您可以直接用浏览器截图或打印为PDF', '⚠️');
             } finally {
-                // 恢复控制菜单
-                controlBar.style.display = 'flex';
                 setTimeout(hideToast, 3500);
             }
         });
